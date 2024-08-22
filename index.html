@@ -1,0 +1,346 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fire Extinguisher Inspection</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap');
+
+        body {
+            font-family: 'Roboto', sans-serif;
+            background-color: #e9ecef;
+            color: #343a40;
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+        .container {
+            background-color: #ffffff;
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+            max-width: 900px;
+            width: 100%;
+            position: relative;
+            overflow: hidden;
+        }
+        .container::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 180px;
+            background: linear-gradient(to right, #4CAF50, #66BB6A);
+            z-index: 0;
+            border-radius: 12px 12px 0 0;
+        }
+        h1 {
+            color: #ffffff;
+            text-align: center;
+            margin-top: 0;
+            padding-top: 20px;
+            margin-bottom: 30px;
+            position: relative;
+            z-index: 1;
+        }
+        h2 {
+            color: #4CAF50;
+            border-bottom: 2px solid #4CAF50;
+            padding-bottom: 5px;
+            margin-bottom: 20px;
+            font-size: 1.75em;
+            position: relative;
+            z-index: 1;
+        }
+        label {
+            font-weight: 700;
+            margin-top: 20px;
+            display: block;
+            color: #495057;
+            position: relative;
+            z-index: 1;
+        }
+        input[type="text"], input[type="date"], select, textarea {
+            width: 100%;
+            padding: 12px;
+            margin-top: 8px;
+            border: 1px solid #ced4da;
+            border-radius: 5px;
+            background-color: #f8f9fa;
+            color: #343a40;
+            font-size: 16px;
+            transition: all 0.3s ease;
+            position: relative;
+            z-index: 1;
+        }
+        input[type="text"]:focus, input[type="date"]:focus, select:focus, textarea:focus {
+            border-color: #4CAF50;
+            background-color: #ffffff;
+            outline: none;
+            box-shadow: 0 0 8px rgba(76, 175, 80, 0.3);
+        }
+        textarea {
+            height: 100px;
+            resize: vertical;
+        }
+        button {
+            background-color: #4CAF50;
+            color: white;
+            padding: 15px 25px;
+            border: none;
+            border-radius: 50px;
+            cursor: pointer;
+            font-size: 18px;
+            transition: background-color 0.3s ease;
+            margin-top: 30px;
+            position: relative;
+            z-index: 1;
+            display: block;
+            width: 100%;
+            max-width: 300px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+        button:hover {
+            background-color: #45a049;
+        }
+        hr {
+            border: none;
+            border-top: 2px solid #dee2e6;
+            margin: 40px 0;
+            position: relative;
+            z-index: 1;
+        }
+        .comments-box, .additional-field {
+            display: none;
+            margin-top: 10px;
+        }
+        .banner {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 180px;
+            z-index: 0;
+            background: linear-gradient(to right, #4CAF50, #66BB6A);
+            border-radius: 12px 12px 0 0;
+        }
+        .company-info {
+            text-align: center;
+            margin-bottom: 20px;
+            font-weight: bold;
+            color: #ffffff;
+            font-size: 1.25em;
+            position: relative;
+            z-index: 1;
+        }
+        .company-info a {
+            color: #ffffff;
+            text-decoration: none;
+            transition: color 0.2s ease;
+        }
+        .company-info a:hover {
+            color: #cce5ff;
+        }
+    </style>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <script>
+        function captureFormAsImage() {
+            const submitButton = document.getElementById('submit-button');
+            const viewInspectionsButton = document.getElementById('view-inspections-button');
+            const formElement = document.getElementById('form-container');
+
+            submitButton.style.display = 'none';
+            viewInspectionsButton.style.display = 'none';
+
+            html2canvas(formElement).then(canvas => {
+                const imgData = canvas.toDataURL('image/png');
+                const link = document.createElement('a');
+                link.href = imgData;
+                link.download = 'fire_extinguisher_inspection.png';
+                link.click();
+
+                submitButton.style.display = 'block';
+                viewInspectionsButton.style.display = 'block';
+
+                document.getElementById("inspection-form").submit();
+
+                setTimeout(() => {
+                    window.location.reload();
+                }, 500);
+            });
+        }
+
+        function checkForNoAnswer(selectElement) {
+            const commentsBox = selectElement.nextElementSibling;
+            if (selectElement.value === "no") {
+                commentsBox.style.display = "block";
+            } else {
+                commentsBox.style.display = "none";
+            }
+        }
+
+        function toggleAdditionalField(selectElement, additionalFieldIdYes, additionalFieldIdNo) {
+            const additionalFieldYes = document.getElementById(additionalFieldIdYes);
+            const additionalFieldNo = document.getElementById(additionalFieldIdNo);
+            if (selectElement.value === "yes") {
+                additionalFieldYes.style.display = "block";
+                additionalFieldNo.style.display = "none";
+            } else if (selectElement.value === "no") {
+                additionalFieldNo.style.display = "block";
+                additionalFieldYes.style.display = "none";
+            } else {
+                additionalFieldYes.style.display = "none";
+                additionalFieldNo.style.display = "none";
+            }
+        }
+    </script>
+</head>
+<body>
+
+    <div class="container" id="form-container">
+        <div class="banner"></div>
+        <div class="company-info">
+            EVERSAFE UK LIMITED<br>
+            <a href="https://www.eversafeuk.co.uk" target="_blank">www.eversafeuk.co.uk</a><br>
+            <a href="mailto:enquiries@eversafeuk.co.uk">enquiries@eversafeuk.co.uk</a>
+        </div>
+        <h1>Fire Extinguisher Inspection</h1>
+
+        <form id="inspection-form" action="/submit-inspection" method="POST" onsubmit="captureFormAsImage(); return false;">
+            <label for="company">Company:</label>
+            <input type="text" id="company" name="company" required>
+
+            <label for="location">Fire Extinguisher Location:</label>
+            <input type="text" id="location" name="location" required>
+
+            <label for="reference">Fire Extinguisher Reference:</label>
+            <input type="text" id="reference" name="reference" required>
+
+            <label for="extinguisher-type">Type of Fire Extinguisher:</label>
+            <input type="text" id="extinguisher-type" name="extinguisher_type" required>
+
+            <label for="service-type">Type of Service:</label>
+            <select id="service-type" name="service_type" required>
+                <option value="" disabled selected>Select Service Type</option>
+                <option value="commissioning">Commissioning Service</option>
+                <option value="basic">Basic Service</option>
+            </select>
+
+            <label for="date-service">Date of Service:</label>
+            <input type="date" id="date-service" name="date_service" required>
+
+            <label for="date-replacement">Date of Next Replacement:</label>
+            <input type="date" id="date-replacement" name="date_replacement" required>
+
+            <label for="inspector">Inspection Completed By:</label>
+            <input type="text" id="inspector" name="inspector" required>
+
+            <h2>1. Servicing</h2>
+            <label for="tamper-seal">Has the tamper seal been changed?</label>
+            <select id="tamper-seal" name="tamper_seal" onchange="toggleAdditionalField(this, 'tamper-seal-color', null)">
+                <option value="" disabled selected></option>
+                <option value="yes">Yes</option>
+                <option value="no">No</option>
+                <option value="na">N/A</option>
+                <option value="unknown">Unknown</option>
+            </select>
+            <input type="text" id="tamper-seal-color" name="tamper_seal_color" class="additional-field" placeholder="Enter the color of the tamper seal">
+
+            <label for="gage-dot">Has the gauge dot been changed?</label>
+            <select id="gage-dot" name="gage_dot" onchange="checkForNoAnswer(this)">
+                <option value="" disabled selected></option>
+                <option value="yes">Yes</option>
+                <option value="no">No</option>
+                <option value="na">N/A</option>
+                <option value="unknown">Unknown</option>
+            </select>
+            <textarea class="comments-box" name="gage_dot_comments" placeholder="Comments and Recommendations"></textarea>
+
+            <label for="o-ring">Has the 'O' ring been changed?</label>
+            <select id="o-ring" name="o_ring" onchange="checkForNoAnswer(this)">
+                <option value="" disabled selected></option>
+                <option value="yes">Yes</option>
+                <option value="no">No</option>
+                <option value="na">N/A</option>
+                <option value="unknown">Unknown</option>
+            </select>
+            <textarea class="comments-box" name="o_ring_comments" placeholder="Comments and Recommendations"></textarea>
+
+            <hr>
+
+            <h2>2. Physical Condition</h2>
+            <label for="physical-condition">Is the extinguisher free from visible damage?</label>
+            <select id="physical-condition" name="physical_condition" onchange="checkForNoAnswer(this)">
+                <option value="" disabled selected></option>
+                <option value="yes">Yes</option>
+                <option value="no">No</option>
+                <option value="na">N/A</option>
+                <option value="unknown">Unknown</option>
+            </select>
+            <textarea class="comments-box" name="physical_condition_comments" placeholder="Comments and Recommendations"></textarea>
+
+            <label for="pressure-gauge">Is the pressure gauge in the green zone?</label>
+            <select id="pressure-gauge" name="pressure_gauge" onchange="checkForNoAnswer(this)">
+                <option value="" disabled selected></option>
+                <option value="yes">Yes</option>
+                <option value="no">No</option>
+                <option value="na">N/A</option>
+                <option value="unknown">Unknown</option>
+            </select>
+            <textarea class="comments-box" name="pressure_gauge_comments" placeholder="Comments and Recommendations"></textarea>
+
+            <label for="hose-condition">Is the hose or nozzle in good condition?</label>
+            <select id="hose-condition" name="hose_condition" onchange="checkForNoAnswer(this)">
+                <option value="" disabled selected></option>
+                <option value="yes">Yes</option>
+                <option value="no">No</option>
+                <option value="na">N/A</option>
+                <option value="unknown">Unknown</option>
+            </select>
+            <textarea class="comments-box" name="hose_condition_comments" placeholder="Comments and Recommendations"></textarea>
+
+            <hr>
+
+            <h2>3. Mounting & Accessibility</h2>
+            <label for="properly-mounted">Is the fire extinguisher properly mounted and easily accessible?</label>
+            <select id="properly-mounted" name="properly_mounted" onchange="toggleAdditionalField(this, 'mounting-type-yes', 'mounting-type-no')">
+                <option value="" disabled selected></option>
+                <option value="yes">Yes</option>
+                <option value="no">No</option>
+                <option value="na">N/A</option>
+                <option value="unknown">Unknown</option>
+            </select>
+            <select id="mounting-type-yes" name="mounting_type_yes" class="additional-field">
+                <option value="" disabled selected></option>
+                <option value="stand">Stand</option>
+                <option value="wall-bracket">Wall Bracket</option>
+            </select>
+            <textarea id="mounting-type-no" name="mounting_type_no" class="additional-field" placeholder="Why is the fire extinguisher not properly mounted?"></textarea>
+
+            <label for="signage-present">Is the correct signage present and visible?</label>
+            <select id="signage-present" name="signage_present" onchange="checkForNoAnswer(this)">
+                <option value="" disabled selected></option>
+                <option value="yes">Yes</option>
+                <option value="no">No</option>
+                <option value="na">N/A</option>
+                <option value="unknown">Unknown</option>
+            </select>
+            <textarea class="comments-box" name="signage_present_comments" placeholder="Comments and Recommendations"></textarea>
+
+            <hr>
+
+            <button id="submit-button" type="submit">Submit Inspection</button>
+        </form>
+
+        <!-- New Button to View Inspections -->
+        <button id="view-inspections-button" onclick="window.location.href='/inspections/html';">View Inspections</button>
+    </div>
+
+</body>
+</html>

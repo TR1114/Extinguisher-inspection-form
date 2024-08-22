@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fire Extinguisher Inspections</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 20px;
+        }
+        h1 {
+            color: #4CAF50;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 20px;
+        }
+        th, td {
+            padding: 12px;
+            border: 1px solid #ddd;
+            text-align: left;
+        }
+        th {
+            background-color: #4CAF50;
+            color: white;
+        }
+        tr:nth-child(even) {
+            background-color: #f2f2f2;
+        }
+        tr:hover {
+            background-color: #ddd;
+        }
+        .btn {
+            background-color: #4CAF50;
+            color: white;
+            padding: 10px 20px;
+            text-decoration: none;
+            display: inline-block;
+            margin: 10px 0;
+            border-radius: 5px;
+        }
+        .btn:hover {
+            background-color: #45a049;
+        }
+        .filter-container {
+            margin-bottom: 20px;
+        }
+        .filter-container label {
+            margin-right: 10px;
+        }
+        .filter-container input, .filter-container select {
+            padding: 8px;
+            margin-right: 10px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+        .filter-container button {
+            padding: 10px 15px;
+            border: none;
+            background-color: #4CAF50;
+            color: white;
+            cursor: pointer;
+            border-radius: 4px;
+        }
+        .action-buttons {
+            margin-top: 20px;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <h1>Fire Extinguisher Inspections</h1>
+    <div class="filter-container">
+        <form action="/inspections/html" method="get">
+            <label for="company">Company:</label>
+            <input type="text" id="company" name="company" value="{{ request.args.get('company', '') }}">
+
+            <label for="location">Location:</label>
+            <input type="text" id="location" name="location" value="{{ request.args.get('location', '') }}">
+
+            <label for="extinguisher_type">Extinguisher Type:</label>
+            <input type="text" id="extinguisher_type" name="extinguisher_type" value="{{ request.args.get('extinguisher_type', '') }}">
+
+            <label for="service_type">Service Type:</label>
+            <select id="service_type" name="service_type">
+                <option value="">All</option>
+                <option value="commissioning" {% if request.args.get('service_type') == 'commissioning' %}selected{% endif %}>Commissioning</option>
+                <option value="basic" {% if request.args.get('service_type') == 'basic' %}selected{% endif %}>Basic</option>
+            </select>
+
+            <button type="submit">Filter</button>
+        </form>
+    </div>
+
+    <table>
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Company</th>
+                <th>Location</th>
+                <th>Reference</th>
+                <th>Type</th>
+                <th>Service Type</th>
+                <th>Date of Service</th>
+                <th>Date of Next Replacement</th>
+                <th>Inspector</th>
+                <th>Delete</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for inspection in inspections %}
+            <tr>
+                <td>{{ inspection.id }}</td>
+                <td>{{ inspection.company }}</td>
+                <td>{{ inspection.location }}</td>
+                <td>{{ inspection.reference }}</td>
+                <td>{{ inspection.extinguisher_type }}</td>
+                <td>{{ inspection.service_type }}</td>
+                <td>{{ inspection.date_service }}</td>
+                <td>{{ inspection.date_replacement }}</td>
+                <td>{{ inspection.inspector }}</td>
+                <td>
+                    <form action="/delete-inspection/{{ inspection.id }}" method="post" onsubmit="return confirm('Are you sure you want to delete this inspection?');">
+                        <button type="submit">Delete</button>
+                    </form>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    <div class="action-buttons">
+        <a href="/generate-pdf?{{ request.query_string|safe }}" class="btn">Download PDF Report</a>
+        <a href="/generate-excel?{{ request.query_string|safe }}" class="btn">Download Excel Report</a>
+    </div>
+</body>
+</html>
